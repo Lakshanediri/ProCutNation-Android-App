@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- theme for light mode. -->
+    <style name="Theme.ProCutNation" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize light theme. -->
+        <item name="colorPrimary">@color/app_orange</item>
+        <item name="colorPrimaryVariant">@color/app_orange_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/app_dark_blue</item>
+        <item name="colorSecondaryVariant">@color/app_dark_blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <style name="Theme.ProCutNation.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AddTaskEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:background">@drawable/edittext_background</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="ProfileField" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:background">@drawable/edittext_background</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ProfileEditIcon" parent="">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:src">@drawable/ic_edit</item>
+    </style>
+
+</resources>

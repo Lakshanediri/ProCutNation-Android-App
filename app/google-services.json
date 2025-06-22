@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "818547535779",
+    "project_id": "procutnation",
+    "storage_bucket": "procutnation.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818547535779:android:c5e6c8ac06380fb1a3b416",
+        "android_client_info": {
+          "package_name": "com.s22010104.procutnation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs4kinIM-dDFIdtYQHzjEP6r1QMIj5ejs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

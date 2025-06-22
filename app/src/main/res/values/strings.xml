@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">ProCutNation</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Add other strings as we build each screen -->
+
+    <string name="default_web_client_id">AIzaSyAs4kinIM-dDFIdtYQHzjEP6r1QMIj5ejs</string>
+
+    <string-array name="priority_levels">
+        <item>Low Priority</item>
+        <item>Medium Priority</item>
+        <item>High Priority</item>
+    </string-array>
+
+    <string-array name="pomodoro_times">
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
+
+</resources>

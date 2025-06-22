@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/dark_background"
+    tools:context=".LeaderboardFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_leaderboard"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="Leaderboard"
+        app:titleTextColor="@color/white"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationIconTint="@color/white"/>
+
+    <!-- Podium Section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/podiumLayout"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:padding="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <!-- 2nd Place -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/secondPlaceImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_account_circle"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            app:civ_circle_background_color="@color/white"
+            android:background="@drawable/podium_glow_silver"
+            app:layout_constraintEnd_toStartOf="@id/firstPlaceImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/secondPlacePodium"
+            android:layout_marginBottom="-10dp"/>
+        <TextView android:id="@+id/secondPlaceName" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Silver Name" android:textColor="@color/white" app:layout_constraintStart_toStartOf="@id/secondPlaceImage" app:layout_constraintEnd_toEndOf="@id/secondPlaceImage" app:layout_constraintTop_toBottomOf="@id/secondPlaceImage"/>
+        <TextView android:id="@+id/secondPlaceXp" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="8000 XP" android:textColor="@color/app_orange" android:textStyle="bold" app:layout_constraintTop_toBottomOf="@id/secondPlaceName" app:layout_constraintStart_toStartOf="@id/secondPlaceName" app:layout_constraintEnd_toEndOf="@id/secondPlaceName"/>
+        <View android:id="@+id/secondPlacePodium" android:layout_width="0dp" android:layout_height="60dp" android:background="#C0C0C0" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="@id/secondPlaceImage" app:layout_constraintEnd_toEndOf="@id/secondPlaceImage"/>
+
+        <!-- 1st Place -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/firstPlaceImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_account_circle"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            app:civ_circle_background_color="@color/white"
+            android:background="@drawable/podium_glow_gold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/firstPlacePodium"
+            android:layout_marginBottom="-10dp"/>
+        <TextView android:id="@+id/firstPlaceName" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Gold Name" android:textColor="@color/white" app:layout_constraintStart_toStartOf="@id/firstPlaceImage" app:layout_constraintEnd_toEndOf="@id/firstPlaceImage" app:layout_constraintTop_toBottomOf="@id/firstPlaceImage"/>
+        <TextView android:id="@+id/firstPlaceXp" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="12000 XP" android:textColor="@color/app_orange" android:textStyle="bold" app:layout_constraintTop_toBottomOf="@id/firstPlaceName" app:layout_constraintStart_toStartOf="@id/firstPlaceName" app:layout_constraintEnd_toEndOf="@id/firstPlaceName"/>
+        <View android:id="@+id/firstPlacePodium" android:layout_width="0dp" android:layout_height="80dp" android:background="#FFD700" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="@id/firstPlaceImage" app:layout_constraintEnd_toEndOf="@id/firstPlaceImage"/>
+
+        <!-- 3rd Place -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/thirdPlaceImage"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/ic_account_circle"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            app:civ_circle_background_color="@color/white"
+            android:background="@drawable/podium_glow_bronze"
+            app:layout_constraintStart_toEndOf="@id/firstPlaceImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/thirdPlacePodium"
+            android:layout_marginBottom="-10dp"/>
+        <TextView android:id="@+id/thirdPlaceName" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Bronze Name" android:textColor="@color/white" app:layout_constraintStart_toStartOf="@id/thirdPlaceImage" app:layout_constraintEnd_toEndOf="@id/thirdPlaceImage" app:layout_constraintTop_toBottomOf="@id/thirdPlaceImage"/>
+        <TextView android:id="@+id/thirdPlaceXp" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="4000 XP" android:textColor="@color/app_orange" android:textStyle="bold" app:layout_constraintTop_toBottomOf="@id/thirdPlaceName" app:layout_constraintStart_toStartOf="@id/thirdPlaceName" app:layout_constraintEnd_toEndOf="@id/thirdPlaceName"/>
+        <View android:id="@+id/thirdPlacePodium" android:layout_width="0dp" android:layout_height="50dp" android:background="#CD7F32" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="@id/thirdPlaceImage" app:layout_constraintEnd_toEndOf="@id/thirdPlaceImage"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/leaderboardRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!-- Loading indicator -->
+        <ProgressBar
+            android:id="@+id/progressBarLeaderboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <!-- Empty state text -->
+        <TextView
+            android:id="@+id/textViewEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leaderboard is empty."
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base light white color -->
+    <item android:drawable="@color/app_light_white" />
+
+    <!--
+    Optional: If you export the orange/blue patterns as a single transparent PNG,
+    you can add it as another item layer here to replicate the design exactly.
+    For example:
+    <item android:drawable="@drawable/background_patterns" />
+    -->
+</layer-list>

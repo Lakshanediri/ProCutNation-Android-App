@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base white color -->
+    <item android:drawable="@color/white" />
+
+    <!-- Top Orange Diagonal Shape -->
+    <!-- We use a rotated rectangle to create the diagonal effect -->
+    <item
+        android:left="-200dp"
+        android:right="-200dp"
+        android:top="-300dp"
+        android:bottom="300dp">
+        <rotate
+            android:fromDegrees="-15"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/app_orange" />
+            </shape>
+        </rotate>
+    </item>
+
+    <!-- Bottom Blue Diagonal Shape -->
+    <item
+        android:left="-200dp"
+        android:right="-200dp"
+        android:top="300dp"
+        android:bottom="-300dp">
+        <rotate
+            android:fromDegrees="-15"
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/app_dark_blue" />
+            </shape>
+        </rotate>
+    </item>
+
+</layer-list>

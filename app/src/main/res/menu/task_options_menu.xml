@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_edit_task"
+        android:title="Edit Task Details" />
+    <item
+        android:id="@+id/menu_change_task_color"
+        android:title="Change Color" />
+    <item
+        android:id="@+id/menu_delete_task"
+        android:title="Delete Task" />
+</menu>

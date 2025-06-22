@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- theme for dark mode. -->
+    <style name="Theme.ProCutNation" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/app_orange_dark</item>
+        <item name="colorPrimaryVariant">@color/app_orange</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSecondary">@color/app_dark_blue</item>
+        <item name="colorSecondaryVariant">@color/app_dark_blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+    </style>
+</resources>
