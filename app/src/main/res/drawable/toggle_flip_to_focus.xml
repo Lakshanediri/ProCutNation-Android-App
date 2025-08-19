@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when the button is checked (ON) -->
+    <item android:state_checked="true">
+        <layer-list>
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="@color/app_green"/>
+                </shape>
+            </item>
+            <item android:drawable="@drawable/ic_flip_to_focus"
+                android:gravity="center"/>
+        </layer-list>
+    </item>
+    <!-- Default state (OFF) -->
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="@color/light_gray"/>
+                </shape>
+            </item>
+            <item android:drawable="@drawable/ic_flip_to_focus"
+                android:gravity="center"/>
+        </layer-list>
+    </item>
+</selector>

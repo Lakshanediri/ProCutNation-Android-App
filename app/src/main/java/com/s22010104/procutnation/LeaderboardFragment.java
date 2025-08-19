@@ -1,6 +1,9 @@
 package com.s22010104.procutnation;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LeaderboardFragment extends Fragment {
 
@@ -28,14 +32,13 @@ public class LeaderboardFragment extends Fragment {
     private List<LeaderboardUser> userListForRecycler;
     private FirebaseFirestore db;
 
-    // UI elements
     private ProgressBar progressBar;
     private TextView emptyTextView;
     private ConstraintLayout podiumLayout;
 
-    // Podium Views
     private TextView firstPlaceName, secondPlaceName, thirdPlaceName;
     private TextView firstPlaceXp, secondPlaceXp, thirdPlaceXp;
+    private CircleImageView firstPlaceImage, secondPlaceImage, thirdPlaceImage;
 
     private static final String TAG = "LeaderboardFragment";
 
@@ -54,18 +57,7 @@ public class LeaderboardFragment extends Fragment {
             }
         });
 
-        // Initialize UI elements
-        progressBar = view.findViewById(R.id.progressBarLeaderboard);
-        emptyTextView = view.findViewById(R.id.textViewEmpty);
-        podiumLayout = view.findViewById(R.id.podiumLayout);
-
-        // Initialize podium views
-        firstPlaceName = view.findViewById(R.id.firstPlaceName);
-        secondPlaceName = view.findViewById(R.id.secondPlaceName);
-        thirdPlaceName = view.findViewById(R.id.thirdPlaceName);
-        firstPlaceXp = view.findViewById(R.id.firstPlaceXp);
-        secondPlaceXp = view.findViewById(R.id.secondPlaceXp);
-        thirdPlaceXp = view.findViewById(R.id.thirdPlaceXp);
+        initializeViews(view);
 
         leaderboardRecyclerView = view.findViewById(R.id.leaderboardRecyclerView);
         leaderboardRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -75,6 +67,23 @@ public class LeaderboardFragment extends Fragment {
         loadLeaderboardData();
 
         return view;
+    }
+
+    private void initializeViews(View view) {
+        progressBar = view.findViewById(R.id.progressBarLeaderboard);
+        emptyTextView = view.findViewById(R.id.textViewEmpty);
+        podiumLayout = view.findViewById(R.id.podiumLayout);
+
+        firstPlaceName = view.findViewById(R.id.firstPlaceName);
+        secondPlaceName = view.findViewById(R.id.secondPlaceName);
+        thirdPlaceName = view.findViewById(R.id.thirdPlaceName);
+        firstPlaceXp = view.findViewById(R.id.firstPlaceXp);
+        secondPlaceXp = view.findViewById(R.id.secondPlaceXp);
+        thirdPlaceXp = view.findViewById(R.id.thirdPlaceXp);
+
+        firstPlaceImage = view.findViewById(R.id.firstPlaceImage);
+        secondPlaceImage = view.findViewById(R.id.secondPlaceImage);
+        thirdPlaceImage = view.findViewById(R.id.thirdPlaceImage);
     }
 
     private void loadLeaderboardData() {
@@ -89,7 +98,21 @@ public class LeaderboardFragment extends Fragment {
                     if (task.isSuccessful() && task.getResult() != null) {
                         List<LeaderboardUser> allUsers = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            allUsers.add(document.toObject(LeaderboardUser.class));
+                            try {
+                                String name = document.getString("name");
+                                Long xpLevelLong = document.getLong("xpLevel");
+                                Long pointsLong = document.getLong("points"); // Fetch points
+                                String profileImage = document.getString("profileImageBase64");
+
+                                if (name == null) name = "Unknown User";
+                                if (xpLevelLong == null) xpLevelLong = 0L;
+                                if (pointsLong == null) pointsLong = 0L; // Default points to 0
+                                if (profileImage == null) profileImage = "";
+
+                                allUsers.add(new LeaderboardUser(name, xpLevelLong, pointsLong, profileImage));
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error parsing user document: " + document.getId(), e);
+                            }
                         }
 
                         if (allUsers.isEmpty()) {
@@ -105,7 +128,7 @@ public class LeaderboardFragment extends Fragment {
                         }
                     } else {
                         Log.w(TAG, "Error getting documents.", task.getException());
-                        Toast.makeText(getContext(), "Error loading leaderboard. Check logs for details.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Error loading leaderboard.", Toast.LENGTH_SHORT).show();
                         emptyTextView.setText("Could not load leaderboard.");
                         emptyTextView.setVisibility(View.VISIBLE);
                     }
@@ -125,16 +148,22 @@ public class LeaderboardFragment extends Fragment {
 
     private void updatePodium(List<LeaderboardUser> allUsers) {
         if (allUsers.size() > 0) {
-            firstPlaceName.setText(allUsers.get(0).getName());
-            firstPlaceXp.setText(allUsers.get(0).getXpLevel() + " XP");
+            LeaderboardUser first = allUsers.get(0);
+            firstPlaceName.setText(first.getName());
+            firstPlaceXp.setText(first.getXpLevel() + " XP");
+            setProfileImage(first.getProfileImageBase64(), firstPlaceImage);
         }
         if (allUsers.size() > 1) {
-            secondPlaceName.setText(allUsers.get(1).getName());
-            secondPlaceXp.setText(allUsers.get(1).getXpLevel() + " XP");
+            LeaderboardUser second = allUsers.get(1);
+            secondPlaceName.setText(second.getName());
+            secondPlaceXp.setText(second.getXpLevel() + " XP");
+            setProfileImage(second.getProfileImageBase64(), secondPlaceImage);
         }
         if (allUsers.size() > 2) {
-            thirdPlaceName.setText(allUsers.get(2).getName());
-            thirdPlaceXp.setText(allUsers.get(2).getXpLevel() + " XP");
+            LeaderboardUser third = allUsers.get(2);
+            thirdPlaceName.setText(third.getName());
+            thirdPlaceXp.setText(third.getXpLevel() + " XP");
+            setProfileImage(third.getProfileImageBase64(), thirdPlaceImage);
         }
     }
 
@@ -144,5 +173,15 @@ public class LeaderboardFragment extends Fragment {
             userListForRecycler.addAll(allUsers.subList(3, allUsers.size()));
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private void setProfileImage(String base64, CircleImageView imageView) {
+        if (base64 != null && !base64.isEmpty() && getContext() != null) {
+            byte[] decodedBytes = Base64.decode(base64, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            imageView.setImageBitmap(bitmap);
+        } else {
+            imageView.setImageResource(R.drawable.ic_account_circle);
+        }
     }
 }

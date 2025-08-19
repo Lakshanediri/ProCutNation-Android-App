@@ -1,58 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/edittext_background"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/rankTextView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:text="4"
-        android:textColor="@color/white"
-        android:background="@drawable/button_orange_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        tools:text="4" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImageView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:src="@drawable/ic_account_circle"
-        app:civ_border_color="@color/white"
+        app:civ_border_color="@color/app_orange"
         app:civ_border_width="2dp"
-        app:layout_constraintStart_toEndOf="@id/rankTextView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/nameTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="User Name"
-        android:textColor="@color/white"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/profileImageView"
-        app:layout_constraintEnd_toStartOf="@id/pointsTextView"
-        app:layout_constraintTop_toTopOf="@id/profileImageView"
-        app:layout_constraintBottom_toBottomOf="@id/profileImageView"/>
+        app:layout_constraintEnd_toEndOf="@id/profileImageView"
+        app:layout_constraintStart_toStartOf="@id/profileImageView"
+        app:layout_constraintTop_toBottomOf="@id/profileImageView"
+        tools:text="User Name" />
+
+    <TextView
+        android:id="@+id/xpTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/app_orange"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/nameTextView"
+        app:layout_constraintStart_toStartOf="@id/nameTextView"
+        app:layout_constraintTop_toBottomOf="@id/nameTextView"
+        tools:text="2500 XP" />
 
     <TextView
         android:id="@+id/pointsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="12000"
-        android:textColor="@color/app_orange"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_marginTop="4dp"
+        android:drawableStart="@drawable/ic_coin"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/xpTextView"
+        app:layout_constraintStart_toStartOf="@id/xpTextView"
+        app:layout_constraintTop_toBottomOf="@id/xpTextView"
+        tools:text="1500 Points" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

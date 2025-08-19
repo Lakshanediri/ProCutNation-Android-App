@@ -4,10 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,25 +28,22 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+// NOTE: No changes needed for the class declaration or interfaces
 public class ProfileFragment extends Fragment implements AchievementsAdapter.AchievementInteractionListener {
 
     private TextView textName, textEmail, textPoints, textXpLevel;
@@ -54,20 +55,37 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
     private List<DocumentSnapshot> inventoryList;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseStorage storage;
+    // NOTE: We are no longer using FirebaseStorage for this, but the variable is kept as requested.
+    // private FirebaseStorage storage;
     private ActivityResultLauncher<String> imagePickerLauncher;
-    private Uri imageUri;
+    // NOTE: We no longer need the imageUri variable for uploads.
+    // private Uri imageUri;
     private SwitchMaterial darkModeSwitch;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // --- CHANGED: The image picker now converts the image to Base64 and saves to Firestore ---
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 uri -> {
                     if (uri != null) {
-                        imageUri = uri;
-                        profileImageView.setImageURI(imageUri);
-                        uploadProfilePicture();
+                        try {
+                            // Show a progress dialog while processing
+                            ProgressDialog progressDialog = new ProgressDialog(getContext());
+                            progressDialog.setTitle("Updating...");
+                            progressDialog.show();
+
+                            // Get the image as a Bitmap
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
+                            // Convert the Bitmap to a compressed Base64 string
+                            String base64Image = encodeBitmapToBase64(bitmap);
+                            // Save the string to Firestore
+                            saveBase64ImageToFirestore(base64Image, progressDialog);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -79,7 +97,8 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
+        // NOTE: Firebase Storage is not initialized here anymore for this feature.
+        // storage = FirebaseStorage.getInstance();
 
         initializeViews(view);
         setupListeners();
@@ -90,6 +109,7 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
         return view;
     }
 
+    // --- NO CHANGES to initializeViews() or setupListeners() ---
     private void initializeViews(View view) {
         textName = view.findViewById(R.id.textName);
         textEmail = view.findViewById(R.id.textEmail);
@@ -111,7 +131,6 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
         achievementsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         achievementsRecyclerView.setAdapter(achievementsAdapter);
     }
-
     private void setupListeners() {
         btnLogout.setOnClickListener(v -> logoutUser());
         btnDeleteAccount.setOnClickListener(v -> showDeleteConfirmationDialog());
@@ -143,6 +162,7 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
             editor.apply();
         });
     }
+    // --- END of unchanged section ---
 
     private void loadUserProfile() {
         FirebaseUser user = mAuth.getCurrentUser();
@@ -153,15 +173,19 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
                     textEmail.setText(doc.getString("email"));
                     textPoints.setText("Points - " + doc.getLong("points"));
                     textXpLevel.setText("XP Level - " + doc.getLong("xpLevel"));
-                    String imageUrl = doc.getString("profileImageUrl");
-                    if (imageUrl != null && !imageUrl.isEmpty()) {
-                        Glide.with(getContext()).load(imageUrl).into(profileImageView);
+
+                    // --- CHANGED: Load the Base64 string and decode it ---
+                    String imageBase64 = doc.getString("profileImageBase64");
+                    if (imageBase64 != null && !imageBase64.isEmpty()) {
+                        Bitmap bitmap = decodeBase64ToBitmap(imageBase64);
+                        profileImageView.setImageBitmap(bitmap);
                     }
                 }
             });
         }
     }
 
+    // --- NO CHANGES to loadInventory() or onPetSelected() ---
     private void loadInventory() {
         if (mAuth.getCurrentUser() != null) {
             db.collection("users").document(mAuth.getUid()).collection("inventory")
@@ -175,7 +199,6 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
                     });
         }
     }
-
     @Override
     public void onPetSelected(String drawableName) {
         if (mAuth.getCurrentUser() != null) {
@@ -185,32 +208,58 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
                     .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to set active pet.", Toast.LENGTH_SHORT).show());
         }
     }
+    // --- END of unchanged section ---
+
 
     private void pickImageFromGallery() {
         imagePickerLauncher.launch("image/*");
     }
 
-    private void uploadProfilePicture() {
-        if (imageUri == null) return;
-        ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setTitle("Uploading...");
-        progressDialog.show();
-        StorageReference storageRef = storage.getReference().child("profile_pictures/" + mAuth.getUid());
-        storageRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    saveProfileImageUrlToFirestore(uri.toString());
+    // --- DELETED: The old uploadProfilePicture() method is gone. ---
+
+    // --- DELETED: The old saveProfileImageUrlToFirestore() method is gone. ---
+
+    // --- NEW METHOD: Converts an image to a compressed Base64 string ---
+    private String encodeBitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // Compress the image to JPEG format with 80% quality to reduce size
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+        byte[] byteArray = baos.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+    // --- NEW METHOD: Decodes a Base64 string back into an image (Bitmap) ---
+    private Bitmap decodeBase64ToBitmap(String base64Str) {
+        byte[] decodedBytes = Base64.decode(base64Str, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
+    // --- NEW METHOD: Saves the Base64 string to Firestore ---
+    private void saveBase64ImageToFirestore(String base64Image, ProgressDialog progressDialog) {
+        if (mAuth.getCurrentUser() == null) {
+            progressDialog.dismiss();
+            return;
+        }
+        String userId = mAuth.getUid();
+        DocumentReference userRef = db.collection("users").document(userId);
+
+        // Update the 'profileImageBase64' field in the user's document
+        userRef.update("profileImageBase64", base64Image)
+                .addOnSuccessListener(aVoid -> {
+                    // Also update the image view immediately
+                    Bitmap bitmap = decodeBase64ToBitmap(base64Image);
+                    profileImageView.setImageBitmap(bitmap);
                     progressDialog.dismiss();
-                }))
+                    Toast.makeText(getContext(), "Profile Picture Updated.", Toast.LENGTH_SHORT).show();
+                })
                 .addOnFailureListener(e -> {
                     progressDialog.dismiss();
-                    Toast.makeText(getContext(), "Upload failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed to save image.", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void saveProfileImageUrlToFirestore(String imageUrl) {
-        db.collection("users").document(mAuth.getUid()).update("profileImageUrl", imageUrl);
-    }
 
+    // --- NO CHANGES to any of the methods below this line ---
     private void showUpdateDialog(String title, String currentValue, final UpdateCallback callback) {
         final EditText input = new EditText(getContext());
         input.setText(currentValue);
@@ -221,12 +270,10 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).show();
     }
-
     private void updateName(String newName) {
         db.collection("users").document(mAuth.getUid()).update("name", newName)
                 .addOnSuccessListener(aVoid -> loadUserProfile());
     }
-
     private void showReauthDialog(Runnable onReauthSuccess) {
         final EditText passwordInput = new EditText(getContext());
         passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -242,11 +289,9 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
                 })
                 .setNegativeButton("Cancel", null).show();
     }
-
     private void showUpdateEmailDialog() {
         showUpdateDialog("Update Email", textEmail.getText().toString(), this::updateEmail);
     }
-
     private void updateEmail(String newEmail) {
         mAuth.getCurrentUser().verifyBeforeUpdateEmail(newEmail).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -256,7 +301,6 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
             }
         });
     }
-
     private void showUpdatePasswordDialog() {
         LinearLayout layout = new LinearLayout(getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -280,11 +324,9 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
                 })
                 .setNegativeButton("Cancel", null).show();
     }
-
     private void updatePassword(String newPassword) {
         mAuth.getCurrentUser().updatePassword(newPassword).addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Password updated.", Toast.LENGTH_SHORT).show());
     }
-
     private void logoutUser() {
         mAuth.signOut();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -294,7 +336,6 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
             getActivity().finish();
         }
     }
-
     private void showDeleteConfirmationDialog() {
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete Account")
@@ -303,7 +344,6 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
     private void deleteUserAccount() {
         String userId = mAuth.getUid();
         db.collection("users").document(userId).delete()
@@ -316,7 +356,6 @@ public class ProfileFragment extends Fragment implements AchievementsAdapter.Ach
                     }
                 }));
     }
-
     interface UpdateCallback { void onUpdate(String value); }
 }
 

@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions for Internet, Location, and Notifications -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -53,7 +59,8 @@
         <activity
             android:name=".PomodoroActivity"
             android:exported="false"
-            android:theme="@style/Theme.ProCutNation.NoActionBar" />
+            android:theme="@style/Theme.ProCutNation.NoActionBar"
+            android:lockTaskMode="if_whitelisted" />
 
         <activity
             android:name=".ProgressActivity"
@@ -62,9 +69,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC7zW50hUcHXu4s7OAcL8lcO1rY5kHzEcA" />
-
-
-
 
 
     </application>

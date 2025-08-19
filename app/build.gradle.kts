@@ -89,4 +89,13 @@ dependencies {
     // Glide for loading images from a URL
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
+    // Google Play Services for Location
+    implementation ("com.google.android.gms:play-services-location:21.2.0")
+
+    // Polyline decoding for drawing routes
+    implementation ("com.google.maps.android:android-maps-utils:2.2.0")
+
+    // Google Places SDK
+    implementation ("com.google.android.libraries.places:places:3.4.0")
+
 }

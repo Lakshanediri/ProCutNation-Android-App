@@ -33,6 +33,19 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar_pomodoro"
         tools:text="Task Name" />
 
+    <!-- THIS IS THE NEW FOCUS MODE SWITCH -->
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/focusModeSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Focus Mode"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/textViewTaskNameHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <ProgressBar
         android:id="@+id/progressBarTimer"
         style="?android:attr/progressBarStyleHorizontal"
@@ -44,7 +57,7 @@
         app:layout_constraintBottom_toTopOf="@id/guideline_h_center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewTaskNameHeader" />
+        app:layout_constraintTop_toBottomOf="@id/focusModeSwitch" />
 
     <TextView
         android:id="@+id/textViewTimer"
@@ -59,21 +72,7 @@
         app:layout_constraintTop_toTopOf="@id/progressBarTimer"
         tools:text="25:00" />
 
-    <TextView
-        android:id="@+id/textViewQuote"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:gravity="center"
-        android:text="&quot;Focus on your progress, not perfection. Keep producing, don't quit.&quot;"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        app:layout_constraintTop_toBottomOf="@id/guideline_h_center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
+    <!-- ... (Rest of the layout remains the same) ... -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnPauseContinue"
         android:layout_width="0dp"
@@ -110,6 +109,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.55" />
+        app:layout_constraintGuide_percent="0.6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

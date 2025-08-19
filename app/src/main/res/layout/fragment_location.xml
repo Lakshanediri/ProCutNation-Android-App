@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".LocationFragment">
 
-    <!-- Google Map -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -19,13 +18,63 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="80dp"
-        android:text="My Location"
+        android:background="@drawable/button_white_background"
         android:drawableStart="@drawable/ic_location"
         android:drawablePadding="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:background="@drawable/button_white_background"
+        android:text="My Location"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- NEW: CardView to show route details -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/routeInfoCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@id/recenterButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_time"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="15 min" />
+
+            <TextView
+                android:id="@+id/textDistance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_distance"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="4.5 km" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
